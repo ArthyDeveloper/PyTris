@@ -1,3 +1,6 @@
 # For tests.
 debugs.py
 .env
+
+# Not used.
+__pycache__
