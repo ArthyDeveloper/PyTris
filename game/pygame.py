@@ -1,6 +1,6 @@
 from settings import (
-  screen_width,
-  screen_height,
+  start_screen_width,
+  start_screen_height,
   game_clock,
   background_color
 )
@@ -8,17 +8,40 @@ import pygame, math, sys
 
 def start():
   pygame.init()
-  screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
   pygame.display.set_caption("PyTris - A Tetris Clone")
-  circle_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+
+  # Screen and surfaces set up
+  screen = pygame.display.set_mode((start_screen_width, start_screen_height), pygame.RESIZABLE)
+  screen_width = screen.get_width()
+  screen_height = screen.get_height()
+  game_surface_pos = [math.floor(screen_width*0.8), screen_height]
+  game_surface = pygame.Surface(game_surface_pos)
+  game_surface_width = game_surface.get_width()
+  game_surface_height = game_surface.get_height()
+
+  def scale(num):
+    return int(min(game_surface_width, game_surface_height) * num)
 
   while True:
+    # Variables
+    screen_width = screen.get_width()
+    screen_height = screen.get_height()
+    game_surface_pos = [math.floor(screen_width*0.8), screen_height]
+    game_surface = pygame.Surface(game_surface_pos)
+    game_surface_width = game_surface.get_width()
+    game_surface_height = game_surface.get_height()
+    game_surface_center = (game_surface_width//2, game_surface_height//2)
+
     screen.fill(background_color)
-    circle = pygame.draw.circle(screen, "red", circle_pos, int(screen.get_height() * 0.01))
+    game_surface.fill((50, 50, 50))
+    game_surface = pygame.transform.scale(game_surface, (screen_width*0.8, screen_height))
+    pygame.draw.circle(game_surface, 'red', game_surface_center, scale(0.05))
+    screen.blit(game_surface, (math.floor(screen_width*0.1), 0))
     
     # Handling Events
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
+        pygame.quit()
         sys.exit()
     
     # Handling Controls
