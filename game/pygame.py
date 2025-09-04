@@ -4,6 +4,9 @@ from settings import (
   game_clock,
   background_color
 )
+from game.logics import (
+  generateGrid
+)
 import pygame, math, sys
 
 def start():
@@ -13,16 +16,6 @@ def start():
   # Operations
   def scale(num):
     return int(min(game_surface_width, game_surface_height) * num)
-  
-  def generateGrid(cols, rows):
-    out = []
-    for _ in range(rows):
-      row = []
-      for _ in range(cols):
-        row.append([False, "white"])
-      out.append(row)
-    
-    return out
   
   # Screen and surfaces set up
   screen = pygame.display.set_mode((start_screen_width, start_screen_height), pygame.RESIZABLE)
@@ -35,6 +28,10 @@ def start():
 
   # Grid - Standard = 10 Cols, 20 Rows
   block_size = scale(0.02)
+  cols = 20
+  rows = 30
+  phantom_rows = 3
+  grid = generateGrid(cols, rows, phantom_rows)
 
   while True:
     # Variables
@@ -51,13 +48,19 @@ def start():
     game_surface = pygame.transform.scale(game_surface, (screen_width*0.8, screen_height))
 
     # Testing Grid
+    for row_idx, row in enumerate(grid):
+      for col_idx, col in enumerate(row):
+        x = int((game_surface_width * 0.25) + col_idx * block_size + block_size)
+        y = int(game_surface_height * 0.3 - phantom_rows * block_size) + (row_idx * block_size)
+        pygame.draw.rect(game_surface, col[1], pygame.Rect(x, y, block_size, block_size))
 
-    for i in range(20):
+    # Grid Barrier
+    for i in range(rows):
       x = int(game_surface_width * 0.25)
       y = int(game_surface_height * 0.3) + (i * block_size)
 
       pygame.draw.rect(game_surface, 'white', pygame.Rect(x, y, block_size, block_size))
-      pygame.draw.rect(game_surface, 'white', pygame.Rect(x + (11 * block_size), y, block_size, block_size))
+      pygame.draw.rect(game_surface, 'white', pygame.Rect(x + ((cols+1) * block_size), y, block_size, block_size))
     
     #pygame.draw.rect(game_surface, 'white', pygame.Rect(game_surface_center[0], game_surface_center[1], 5, 5))
     #pygame.draw.circle(game_surface, 'red', game_surface_center, scale(0.05))
