@@ -1,3 +1,7 @@
+# Resolution Scale
+def scale(num, width, height):
+  return int(min(width, height) * num)
+
 # Generate Grid
 def generateGrid(cols: int, rows: int, phantom_rows: int):
   grid = []
