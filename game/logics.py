@@ -1,3 +1,8 @@
+import os
+# Clear console
+def clear_console():
+  os.system('cls')
+
 # Resolution Scale
 def scale(num, width, height):
   return int(min(width, height) * num)
