@@ -1,7 +1,7 @@
 import pygame, sys
 
+# Handling Events
 def events(screen_width, screen_height):
-  # Handling Events
     for event in pygame.event.get():
       if event.type == pygame.QUIT: # Quitting Game
         pygame.quit()
@@ -15,6 +15,7 @@ def events(screen_width, screen_height):
         
         pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
+# Handling Inputs / Controls
 def controls():
   keys = pygame.key.get_pressed()
   # Up and Down
