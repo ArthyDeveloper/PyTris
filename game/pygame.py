@@ -6,15 +6,20 @@ from settings import (
 )
 from game.logics import (
   scale,
-  generateGrid
+  generateGrid,
+  clear_console
 )
 from game.surfaces import (
-  create_game_surface
+  create_game_surface,
+  scale_game_surface,
+  get_dimensions,
+  render_ui
 )
 from game.inputs import (
   events,
   controls
 )
+from datetime import datetime
 import pygame, math
 
 def start():
@@ -28,8 +33,7 @@ def start():
   screen_height = screen.get_height()
 
   game_surface = create_game_surface(screen_width, screen_height)
-  game_surface_width = game_surface.get_width()
-  game_surface_height = game_surface.get_height()
+  game_surface_width, game_surface_height = get_dimensions(game_surface)
 
   # Grid - Standard = 10 Cols, 20 Rows
   block_size = scale(0.02, game_surface_width, game_surface_height)
@@ -38,45 +42,39 @@ def start():
   phantom_rows = 3
   grid = generateGrid(cols, rows, phantom_rows)
 
+  clock = pygame.time.Clock()
+
   while True:
+    # Debug
+    start_loop = datetime.now()
+
     # Variables
-    screen_width = screen.get_width()
-    screen_height = screen.get_height()
+    screen_width, screen_height = get_dimensions(screen)
 
     game_surface = create_game_surface(screen_width, screen_height)
-    game_surface_width = game_surface.get_width()
-    game_surface_height = game_surface.get_height()
+    game_surface_width, game_surface_height = get_dimensions(game_surface)
     game_surface_center = (game_surface_width//2, game_surface_height//2)
 
     screen.fill(background_color)
     game_surface.fill((50, 50, 50))
-    game_surface = pygame.transform.scale(game_surface, (screen_width*0.8, screen_height))
+    scale_game_surface(game_surface, screen_width, screen_height)
 
-    # Testing Grid
-    for row_idx, row in enumerate(grid):
-      for col_idx, col in enumerate(row):
-        x = int((game_surface_width * 0.25) + col_idx * block_size + block_size)
-        y = int(game_surface_height * 0.3 - phantom_rows * block_size) + (row_idx * block_size)
-        pygame.draw.rect(game_surface, col[1], pygame.Rect(x, y, block_size, block_size))
+    render_ui('default', game_surface, grid, cols, rows, phantom_rows, block_size)
 
-    # Grid Barrier
-    for i in range(rows):
-      x = int(game_surface_width * 0.25)
-      y = int(game_surface_height * 0.3) + (i * block_size)
-
-      pygame.draw.rect(game_surface, 'white', pygame.Rect(x, y, block_size, block_size))
-      pygame.draw.rect(game_surface, 'white', pygame.Rect(x + ((cols+1) * block_size), y, block_size, block_size))
-    
-    #pygame.draw.rect(game_surface, 'white', pygame.Rect(game_surface_center[0], game_surface_center[1], 5, 5))
-    #pygame.draw.circle(game_surface, 'red', game_surface_center, scale(0.05))
     screen.blit(game_surface, (math.floor(screen_width*0.1), 0))
     
     # Handling Events and Controls
-    events(screen_width, screen_height)
+    events(start_screen_width, start_screen_height)
     controls()
 
-    clock = pygame.time.Clock().tick(game_clock) / 1000
-    pygame.display.flip()
+    clock.tick(game_clock)
+    pygame.display.update()
+
+    # Debug
+    end_loop = datetime.now()
+    clear_console()
+    print(f'FPS: {clock.get_fps()}')
+    print(f'Frametime: {(end_loop - start_loop).total_seconds():.3f}')
 
 if __name__ == "__main__":
   start()
