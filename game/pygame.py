@@ -2,7 +2,9 @@ from settings import (
   start_screen_width,
   start_screen_height,
   game_clock,
-  background_color
+  background_color,
+  block_size as bl_size,
+  border_size as bo_size
 )
 from game.logics import (
   scale,
@@ -28,19 +30,15 @@ def start():
 
   # Screen and surfaces set up
   screen = pygame.display.set_mode((start_screen_width, start_screen_height), pygame.RESIZABLE)
-
-  screen_width = screen.get_width()
-  screen_height = screen.get_height()
+  screen_width, screen_height = get_dimensions(screen)
 
   game_surface = create_game_surface(screen_width, screen_height)
   game_surface_width, game_surface_height = get_dimensions(game_surface)
 
   # Grid - Standard = 10 Cols, 20 Rows
-  block_size = scale(0.02, game_surface_width, game_surface_height)
-  cols = 20
-  rows = 30
-  phantom_rows = 3
-  grid = generateGrid(cols, rows, phantom_rows)
+  block_size = scale(bl_size, game_surface_width, game_surface_height)
+  border_size = scale(bo_size, game_surface_width, game_surface_height)
+  grid = generateGrid()
 
   clock = pygame.time.Clock()
 
@@ -59,7 +57,7 @@ def start():
     game_surface.fill((50, 50, 50))
     scale_game_surface(game_surface, screen_width, screen_height)
 
-    render_ui('default', game_surface, grid, cols, rows, phantom_rows, block_size)
+    render_ui('default', game_surface, grid, block_size, border_size)
 
     screen.blit(game_surface, (math.floor(screen_width*0.1), 0))
     
