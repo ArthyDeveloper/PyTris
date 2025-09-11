@@ -16,19 +16,37 @@ def get_dimensions(surface):
   return (surface.get_width(), surface.get_height())
 
 def render_ui(panel, surface, grid, block_size, border_size):
+  surface_width, surface_height = get_dimensions(surface)
+  mouse_pos = pygame.mouse.get_pos()
   match panel:
     case 'default':
-      surface_width, surface_height = get_dimensions(surface)
+      font = pygame.font.Font(None, 30)
+      text_color = 'white'
+      text = font.render("Start", True, text_color)
+      text_pos = text.get_rect(center=(surface_width * 0.5, surface_height * 0.7))
+      if text_pos.collidepoint(mouse_pos):
+        text_color = 'red'
+        text = font.render("Start", True, text_color)
+      else:
+        text_color = 'white'
+        text = font.render("Start", True, text_color)
+
+      surface.blit(text, text_pos)
+
+    case 'game':
       # Game Grid
       for row_idx, row in enumerate(grid):
         for col_idx, col in enumerate(row):
-          x = int(surface_width * 0.5 - cols * block_size // 2 + col_idx * block_size + block_size)
-          y = int(surface_height * 0.5 - rows * block_size // 2 + row_idx * block_size)
+          x = surface_width * 0.5 - cols * block_size // 2 + col_idx * block_size + block_size
+          y = surface_height * 0.5 - rows * block_size // 2 + row_idx * block_size
           pygame.draw.rect(surface, col[1], pygame.Rect(x, y, block_size, block_size))
 
       # Grid Barrier
-      x = int(surface_width * 0.5 - cols * block_size // 2)
-      y = int(surface_height * 0.5 - rows * block_size // 2 + border_size * phantom_rows)
-      pygame.draw.rect(surface, 'white', pygame.Rect(x, y, border_size, border_size * rows)) # Left Barrier
-      pygame.draw.rect(surface, 'white', pygame.Rect(x + ((cols+1) * border_size), y, border_size, border_size * rows)) # Right Barrier
-      pygame.draw.rect(surface, 'white', pygame.Rect(x, y + border_size * rows, border_size * (cols + 2), border_size)) # Bottom Barrier
+      x = surface_width * 0.5 - (cols * block_size) // 2
+      y = surface_height * 0.5 - rows * block_size // 2 + block_size * phantom_rows
+      diff = block_size - border_size
+
+      # Rect params: Pos x, Pos y , Width and Height
+      pygame.draw.rect(surface, 'white', pygame.Rect(x + diff, y, border_size, block_size * rows)) # Left Barrier
+      pygame.draw.rect(surface, 'white', pygame.Rect(x + ((cols+1) * block_size), y, border_size, block_size * rows)) # Right Barrier
+      pygame.draw.rect(surface, 'white', pygame.Rect(x + diff, y + block_size * rows, (cols + 2) * block_size - (diff * 2), border_size)) # Bottom Barrier
