@@ -4,7 +4,7 @@ from settings import(
   grid_rows,
   grid_phantom_rows
 )
-import os
+import random, os
 # Clear console
 def clear_console():
   os.system('cls')
@@ -34,3 +34,88 @@ def generateGrid(cols: int = grid_columns, rows: int = grid_rows, phantom_rows: 
     grid.append(row)
   
   return grid
+
+# Random Piece
+def randomPiece():
+  # I L J Z N O
+  pieces = (
+    ( # Line (I)
+      (
+        (1, 1, 1, 1)
+      ),
+      (
+        (1),
+        (1),
+        (1),
+        (1)
+      )
+    ),
+    ( # L
+      (
+        (1, 0),
+        (1, 0),
+        (1, 1),
+      ),
+      (
+        (1, 1, 1),
+        (1, 0, 0)
+      ),
+      (
+        (1, 1),
+        (0, 1),
+        (0, 1),
+      ),
+      (
+        (0, 0, 1),
+        (1, 1, 1)
+      )
+    ),
+    ( # J
+      (
+        (0, 1),
+        (0, 1),
+        (1, 1),
+      ),
+      (
+        (1, 0, 0),
+        (1, 1, 1)
+      ),
+      (
+        (1, 1),
+        (1, 0),
+        (1, 0),
+      ),
+      (
+        (1, 1, 1),
+        (0, 0, 1)
+      )
+    ),
+    ( # Z
+      (
+        (1, 1, 0),
+        (0, 1, 1)
+      ),
+      (
+        (0, 1),
+        (1, 1),
+        (1, 0)
+      )
+    ),
+    ( # N
+      (
+        (0, 1, 1),
+        (1, 1, 0)
+      ),
+      (
+        (1, 0),
+        (1, 1),
+        (0, 1)
+      )
+    ),
+    ( # O
+      (1, 1),
+      (1, 1)
+    )
+  )
+
+  return random.choice(pieces)
