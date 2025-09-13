@@ -8,7 +8,6 @@ from settings import (
 )
 from game.logics import (
   scale,
-  generateGrid,
   clear_console
 )
 from game.surfaces import (
@@ -22,7 +21,7 @@ from game.inputs import (
   controls
 )
 from datetime import datetime
-import pygame, math
+import pygame, settings, math
 
 def start():
   pygame.init()
@@ -38,8 +37,8 @@ def start():
   # Grid - Standard = 10 Cols, 20 Rows
   block_size = scale(bl_size, game_surface_width, game_surface_height)
   border_size = scale(bo_size, game_surface_width, game_surface_height)
-  grid = generateGrid()
 
+  settings.start_tick = datetime.now()
   clock = pygame.time.Clock()
 
   while True:
@@ -57,7 +56,7 @@ def start():
     game_surface.fill((50, 50, 50))
     scale_game_surface(game_surface, screen_width, screen_height)
 
-    render_ui('default', game_surface, grid, block_size, border_size)
+    render_ui('default', game_surface, settings.grid, block_size, border_size)
 
     screen.blit(game_surface, (math.floor(screen_width*0.1), 0))
     
