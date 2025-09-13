@@ -1,10 +1,12 @@
-from settings import(
-  grid_color,
+from settings import (
   grid_columns,
   grid_rows,
-  grid_phantom_rows
+  grid_phantom_rows,
+  grid_color
 )
-import random, os
+from datetime import datetime
+import random, settings, os
+
 # Clear console
 def clear_console():
   os.system('cls')
@@ -35,12 +37,43 @@ def generateGrid(cols: int = grid_columns, rows: int = grid_rows, phantom_rows: 
   
   return grid
 
+settings.grid = generateGrid(grid_columns, grid_rows, grid_phantom_rows)
+
+# Check tick, make piece go down
+def checkTick():
+  # Tick (Make piece go down)
+  settings.end_tick = datetime.now()
+  if (settings.end_tick - settings.start_tick).total_seconds() > settings.difficulty_tick:
+    # Gameplay (Checking if piece is at max bottom level) TO BE MADE
+    if settings.piece_y <= len(settings.grid) - settings.piece_height:
+      settings.current_piece = randomPiece()
+      settings.piece_y = 0
+    else:
+      settings.piece_y += 1
+    settings.start_tick = datetime.now()
+
+# Piece Width and Height
+def pieceWidthHeight(piece):
+  height = len(piece)
+  width = len(piece[0])
+  return (width, height)
+
 # Random Piece
 def randomPiece():
-  # I L J Z N O
+  # I L J Z S O T
   pieces = (
     ( # Line (I)
       (
+        (1, 1, 1, 1)
+      ),
+      (
+        (0, 1),
+        (0, 1),
+        (0, 1),
+        (0, 1)
+      ),
+      (
+        (0, 0, 0, 0),
         (1, 1, 1, 1)
       ),
       (
@@ -52,9 +85,13 @@ def randomPiece():
     ),
     ( # L
       (
+        (0, 0, 1),
+        (1, 1, 1)
+      ),
+      (
         (1, 0),
         (1, 0),
-        (1, 1),
+        (1, 1)
       ),
       (
         (1, 1, 1),
@@ -63,18 +100,18 @@ def randomPiece():
       (
         (1, 1),
         (0, 1),
-        (0, 1),
-      ),
-      (
-        (0, 0, 1),
-        (1, 1, 1)
+        (0, 1)
       )
     ),
     ( # J
       (
+        (1, 1, 1),
+        (0, 0, 1)
+      ),
+      (
         (0, 1),
         (0, 1),
-        (1, 1),
+        (1, 1)
       ),
       (
         (1, 0, 0),
@@ -83,11 +120,7 @@ def randomPiece():
       (
         (1, 1),
         (1, 0),
-        (1, 0),
-      ),
-      (
-        (1, 1, 1),
-        (0, 0, 1)
+        (1, 0)
       )
     ),
     ( # Z
@@ -101,7 +134,7 @@ def randomPiece():
         (1, 0)
       )
     ),
-    ( # N
+    ( # S
       (
         (0, 1, 1),
         (1, 1, 0)
@@ -112,10 +145,35 @@ def randomPiece():
         (0, 1)
       )
     ),
+    ( # T
+      (
+        (0, 1, 0),
+        (1, 1, 1)
+      ),
+      (
+        (1, 0),
+        (1, 1),
+        (1, 0)
+      ),
+      (
+        (1, 1, 1),
+        (0, 1, 0)
+      ),
+      (
+        (0, 1),
+        (1, 1),
+        (0, 1)
+      ),
+    ),
     ( # O
-      (1, 1),
-      (1, 1)
+      (
+        (1, 1),
+        (1, 1)
+      )
     )
   )
 
   return random.choice(pieces)
+
+settings.current_piece = randomPiece()
+settings.piece_width, settings.piece_height = pieceWidthHeight(settings.current_piece)
