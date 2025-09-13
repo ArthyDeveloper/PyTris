@@ -3,7 +3,10 @@ from settings import (
   grid_rows as rows,
   grid_phantom_rows as phantom_rows
 )
-import pygame, math
+from game.logics import (
+  checkTick
+)
+import pygame, settings, math
 
 def create_game_surface(screen_width, screen_height):
   surface_pos = (math.floor(screen_width*0.8), screen_height)
@@ -19,7 +22,7 @@ def render_ui(panel, surface, grid, block_size, border_size):
   surface_width, surface_height = get_dimensions(surface)
   mouse_pos = pygame.mouse.get_pos()
   match panel:
-    case 'default':
+    case 'menu':
       font = pygame.font.Font(None, 30)
       text_color = 'white'
       text = font.render("Start", True, text_color)
@@ -33,7 +36,9 @@ def render_ui(panel, surface, grid, block_size, border_size):
 
       surface.blit(text, text_pos)
 
-    case 'game':
+    case 'default':
+      checkTick()
+
       # Game Grid
       for row_idx, row in enumerate(grid):
         for col_idx, col in enumerate(row):
@@ -47,6 +52,6 @@ def render_ui(panel, surface, grid, block_size, border_size):
       diff = block_size - border_size
 
       # Rect params: Pos x, Pos y , Width and Height
-      pygame.draw.rect(surface, 'white', pygame.Rect(x + diff, y, border_size, block_size * rows)) # Left Barrier
-      pygame.draw.rect(surface, 'white', pygame.Rect(x + ((cols+1) * block_size), y, border_size, block_size * rows)) # Right Barrier
-      pygame.draw.rect(surface, 'white', pygame.Rect(x + diff, y + block_size * rows, (cols + 2) * block_size - (diff * 2), border_size)) # Bottom Barrier
+      pygame.draw.rect(surface, settings.grid_border_color, pygame.Rect(x + diff, y, border_size, block_size * rows)) # Left Barrier
+      pygame.draw.rect(surface, settings.grid_border_color, pygame.Rect(x + ((cols+1) * block_size), y, border_size, block_size * rows)) # Right Barrier
+      pygame.draw.rect(surface, settings.grid_border_color, pygame.Rect(x + diff, y + block_size * rows, (cols + 2) * block_size - (diff * 2), border_size)) # Bottom Barrier
