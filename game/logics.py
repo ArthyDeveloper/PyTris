@@ -2,10 +2,12 @@ from settings import (
   grid_columns,
   grid_rows,
   grid_phantom_rows,
-  grid_color
+  grid_color,
+  block_size,
+  border_size
 )
 from datetime import datetime
-import random, settings, os
+import pygame, random, settings, os
 
 # Clear console
 def clear_console():
@@ -38,6 +40,28 @@ def generateGrid(cols: int = grid_columns, rows: int = grid_rows, phantom_rows: 
   return grid
 
 settings.grid = generateGrid(grid_columns, grid_rows, grid_phantom_rows)
+
+def renderGrid(surface, surface_width, surface_height, grid=settings.grid, cols=grid_columns, rows=grid_rows, block_size=block_size, border_size=border_size, phantom_rows=grid_phantom_rows):
+  # Grid - Standard = 10 Cols, 20 Rows
+  block_size = scale(block_size, surface_width, surface_height)
+  border_size = scale(border_size, surface_width, surface_height)
+
+  # Game Grid
+  for row_idx, row in enumerate(grid):
+    for col_idx, col in enumerate(row):
+      x = surface_width * 0.5 - cols * block_size // 2 + col_idx * block_size + block_size
+      y = surface_height * 0.5 - rows * block_size // 2 + row_idx * block_size
+      pygame.draw.rect(surface, col[1], pygame.Rect(x, y, block_size, block_size))
+
+  # Grid Barrier
+  x = surface_width * 0.5 - (cols * block_size) // 2
+  y = surface_height * 0.5 - rows * block_size // 2 + block_size * phantom_rows
+  diff = block_size - border_size
+ 
+  # Rect params: Pos x, Pos y , Width and Height
+  pygame.draw.rect(surface, settings.grid_border_color, pygame.Rect(x + diff, y, border_size, block_size * rows)) # Left Barrier
+  pygame.draw.rect(surface, settings.grid_border_color, pygame.Rect(x + ((cols+1) * block_size), y, border_size, block_size * rows)) # Right Barrier
+  pygame.draw.rect(surface, settings.grid_border_color, pygame.Rect(x + diff, y + block_size * rows, (cols + 2) * block_size - (diff * 2), border_size)) # Bottom Barrier
 
 # Check tick, make piece go down
 def checkTick():

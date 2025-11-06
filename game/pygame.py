@@ -34,10 +34,6 @@ def start():
   game_surface = create_game_surface(screen_width, screen_height)
   game_surface_width, game_surface_height = get_dimensions(game_surface)
 
-  # Grid - Standard = 10 Cols, 20 Rows
-  block_size = scale(bl_size, game_surface_width, game_surface_height)
-  border_size = scale(bo_size, game_surface_width, game_surface_height)
-
   settings.start_tick = datetime.now()
   clock = pygame.time.Clock()
 
@@ -56,7 +52,7 @@ def start():
     game_surface.fill((50, 50, 50))
     scale_game_surface(game_surface, screen_width, screen_height)
 
-    render_ui('default', game_surface, settings.grid, block_size, border_size)
+    render_ui('default', game_surface)
 
     screen.blit(game_surface, (math.floor(screen_width*0.1), 0))
     
