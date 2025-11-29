@@ -41,7 +41,39 @@ def generateGrid(cols: int = grid_columns, rows: int = grid_rows, phantom_rows: 
 
 settings.grid = generateGrid(grid_columns, grid_rows, grid_phantom_rows)
 
-def renderGrid(surface, surface_width, surface_height, grid=settings.grid, cols=grid_columns, rows=grid_rows, block_size=block_size, border_size=border_size, phantom_rows=grid_phantom_rows):
+def alterGrid(
+    grid: list = settings.grid,
+    piece: tuple = settings.current_piece,
+    grid_color: str = settings.grid_color,
+    piece_width: int = settings.piece_width,
+    piece_height: int = settings.piece_height,
+    piece_x: int = settings.piece_x,
+    piece_y: int = settings.piece_y,
+    rotation: int = settings.piece_rotation
+  ):
+
+  idx_y = 0
+  while idx_y != len(piece[rotation]):
+    for row in piece[rotation]:
+      idx_x = 0
+      for pixel in row:
+        if pixel != 0:
+          settings.grid[piece_y+idx_y][piece_x+idx_x] = [True, grid_color]
+          idx_x += 1
+        
+      idx_y += 1
+
+def renderGrid(
+    surface,
+    surface_width,
+    surface_height,
+    grid=settings.grid,
+    cols=grid_columns,
+    rows=grid_rows,
+    block_size=block_size,
+    border_size=border_size,
+    phantom_rows=grid_phantom_rows
+  ):
   # Grid - Standard = 10 Cols, 20 Rows
   block_size = scale(block_size, surface_width, surface_height)
   border_size = scale(border_size, surface_width, surface_height)
@@ -58,6 +90,8 @@ def renderGrid(surface, surface_width, surface_height, grid=settings.grid, cols=
   y = surface_height * 0.5 - rows * block_size // 2 + block_size * phantom_rows
   diff = block_size - border_size
  
+  alterGrid()
+
   # Rect params: Pos x, Pos y , Width and Height
   pygame.draw.rect(surface, settings.grid_border_color, pygame.Rect(x + diff, y, border_size, block_size * rows)) # Left Barrier
   pygame.draw.rect(surface, settings.grid_border_color, pygame.Rect(x + ((cols+1) * block_size), y, border_size, block_size * rows)) # Right Barrier
@@ -199,5 +233,16 @@ def randomPiece():
 
   return random.choice(pieces)
 
+def newPiece():
+  settings.current_piece = settings.next_piece
+  settings.next_piece = randomPiece()
+  settings.piece_width, settings.piece_height = pieceWidthHeight(current_piece)
+  current_piece = settings.current_piece
+  settings.piece_x, settings.piece_y = 0, 0
+  piece_width, piece_height = settings.piece_width, settings.piece_height
+
 settings.current_piece = randomPiece()
-settings.piece_width, settings.piece_height = pieceWidthHeight(settings.current_piece)
+settings.next_piece = randomPiece()
+current_piece = settings.current_piece
+settings.piece_width, settings.piece_height = pieceWidthHeight(current_piece)
+piece_width, piece_height = settings.piece_width, settings.piece_height

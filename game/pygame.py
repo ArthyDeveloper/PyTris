@@ -7,8 +7,9 @@ from settings import (
   border_size as bo_size
 )
 from game.logics import (
-  scale,
-  clear_console
+  clear_console,
+  newPiece,
+  alterGrid
 )
 from game.surfaces import (
   create_game_surface,
@@ -44,6 +45,7 @@ def start():
     # Variables
     screen_width, screen_height = get_dimensions(screen)
 
+    # Creating game surface
     game_surface = create_game_surface(screen_width, screen_height)
     game_surface_width, game_surface_height = get_dimensions(game_surface)
     game_surface_center = (game_surface_width//2, game_surface_height//2)
@@ -52,6 +54,7 @@ def start():
     game_surface.fill((50, 50, 50))
     scale_game_surface(game_surface, screen_width, screen_height)
 
+    # Renders UI deermined by name
     render_ui('default', game_surface)
 
     screen.blit(game_surface, (math.floor(screen_width*0.1), 0))
