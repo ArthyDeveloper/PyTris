@@ -2,18 +2,18 @@ import pygame, sys
 
 # Handling Events
 def events(screen_width, screen_height):
-    for event in pygame.event.get():
-      if event.type == pygame.QUIT: # Quitting Game
-        pygame.quit()
-        sys.exit()
-      elif event.type == pygame.VIDEORESIZE: # Setting Minimal Window Size
-        new_width, new_height = event.size
-        if new_width < screen_width:
-          new_width = screen_width
-        if new_height < screen_height:
-          new_height = screen_height
-        
-        pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT: # Quitting Game
+      pygame.quit()
+      sys.exit()
+    elif event.type == pygame.VIDEORESIZE: # Setting Minimal Window Size
+      new_width, new_height = event.size
+      if new_width < screen_width:
+        new_width = screen_width
+      if new_height < screen_height:
+        new_height = screen_height
+      
+      pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
 # Handling Inputs / Controls
 def controls():
