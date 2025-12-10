@@ -9,7 +9,8 @@ from settings import (
 from game.logics import (
   clear_console,
   newPiece,
-  alterGrid
+  alterGrid,
+  logics_setup
 )
 from game.surfaces import (
   create_game_surface,
@@ -37,6 +38,8 @@ def start():
 
   settings.start_tick = datetime.now()
   clock = pygame.time.Clock()
+
+  logics_setup()
 
   while True:
     # Debug

@@ -53,15 +53,17 @@ def alterGrid(
   ):
 
   idx_y = 0
-  while idx_y != len(piece[rotation]):
-    for row in piece[rotation]:
-      idx_x = 0
-      for pixel in row:
-        if pixel != 0:
-          settings.grid[piece_y+idx_y][piece_x+idx_x] = [True, grid_color]
-          idx_x += 1
-        
-      idx_y += 1
+  print(settings.current_piece)
+  if settings.current_piece != ():
+    while idx_y != len(settings.current_piece[rotation]):
+      for row in settings.current_piece[rotation]:
+        idx_x = 0
+        for pixel in row:
+          if pixel != 0:
+            settings.grid[piece_y+idx_y][piece_x+idx_x] = [True, grid_color]
+            idx_x += 1
+          
+        idx_y += 1
 
 def renderGrid(
     surface,
@@ -241,8 +243,12 @@ def newPiece():
   settings.piece_x, settings.piece_y = 0, 0
   piece_width, piece_height = settings.piece_width, settings.piece_height
 
-settings.current_piece = randomPiece()
-settings.next_piece = randomPiece()
-current_piece = settings.current_piece
-settings.piece_width, settings.piece_height = pieceWidthHeight(current_piece)
-piece_width, piece_height = settings.piece_width, settings.piece_height
+def logics_setup():
+  settings.current_piece = randomPiece()
+  settings.next_piece = randomPiece()
+  current_piece = settings.current_piece
+  settings.piece_width, settings.piece_height = pieceWidthHeight(current_piece)
+  piece_width, piece_height = settings.piece_width, settings.piece_height
+
+def commands_queue(*commands):
+  _
