@@ -58,7 +58,12 @@ def alterGrid(
     while idx_y != len(settings.current_piece[rotation]):
       for row in settings.current_piece[rotation]:
         idx_x = 0
-        for pixel in row:
+        if len(settings.current_piece) > 1:
+          for pixel in row:
+            if pixel != 0:
+              settings.grid[piece_y+idx_y][piece_x+idx_x] = [True, grid_color]
+              idx_x += 1
+        else:
           if pixel != 0:
             settings.grid[piece_y+idx_y][piece_x+idx_x] = [True, grid_color]
             idx_x += 1
@@ -137,10 +142,10 @@ def randomPiece():
         (1, 1, 1, 1)
       ),
       (
-        (1),
-        (1),
-        (1),
-        (1)
+        (1, 0),
+        (1, 0),
+        (1, 0),
+        (1, 0)
       )
     ),
     ( # L
